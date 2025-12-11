@@ -569,6 +569,7 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            const email = document.getElementById('email').value;
             const formData = new FormData(form);
             submitBtn.disabled = true;
             submitBtn.textContent = 'Joining...';
@@ -589,10 +590,22 @@
                         successMessage.style.display = 'none';
                     }, 5000);
                 } else {
-                    alert('Oops! There was a problem. Please try again.');
+                    // Fallback: Open mailto link
+                    window.location.href = `mailto:people@bartlabs.in?subject=Fetch App - Waitlist Signup&body=Email: ${encodeURIComponent(email)}`;
+                    form.reset();
+                    successMessage.style.display = 'block';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 5000);
                 }
             } catch (error) {
-                alert('Oops! There was a problem. Please try again.');
+                // Fallback: Open mailto link
+                window.location.href = `mailto:people@bartlabs.in?subject=Fetch App - Waitlist Signup&body=Email: ${encodeURIComponent(email)}`;
+                form.reset();
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Join Waitlist';
