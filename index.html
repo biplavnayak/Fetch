@@ -355,13 +355,21 @@
                     The ultimate tool for photographers and creative organizers.</p>
 
                 <div class="cta-section">
-                    <form class="waitlist-form" onsubmit="joinWaitlist(event)">
-                        <input type="email" id="email" placeholder="Enter your email" required>
-                        <button type="submit">Join Waitlist</button>
+                    <form class="waitlist-form" id="waitlist-form" action="https://formspree.io/f/xvgoqbpw"
+                        method="POST">
+                        <input type="email" name="email" id="email" placeholder="Enter your email" required>
+                        <input type="hidden" name="_subject" value="Fetch App - New Waitlist Signup">
+                        <input type="hidden" name="_cc" value="people@bartlabs.in">
+                        <button type="submit" id="submit-btn">Join Waitlist</button>
                     </form>
 
                     <div class="coming-soon">
                         Download for Mac — Coming Soon
+                    </div>
+
+                    <div id="success-message"
+                        style="display: none; padding: 12px 24px; background: #d4edda; color: #155724; border-radius: 8px; margin-top: 20px; font-size: 14px;">
+                        ✅ Thanks for joining! We'll be in touch soon.
                     </div>
                 </div>
             </section>
@@ -549,14 +557,42 @@
     </div>
 
     <script>
-        function joinWaitlist(e) {
+        const form = document.getElementById('waitlist-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const successMessage = document.getElementById('success-message');
+
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            if (email) {
-                alert('Thanks for joining! We\'ll be in touch soon. 🚀');
-                document.getElementById('email').value = '';
+
+            const formData = new FormData(form);
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Joining...';
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    form.reset();
+                    successMessage.style.display = 'block';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 5000);
+                } else {
+                    alert('Oops! There was a problem. Please try again.');
+                }
+            } catch (error) {
+                alert('Oops! There was a problem. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Join Waitlist';
             }
-        }
+        });
     </script>
 </body>
 
