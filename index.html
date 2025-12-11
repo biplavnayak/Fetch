@@ -570,9 +570,6 @@
         const successMessage = document.getElementById('success-message');
         const errorMessage = document.getElementById('error-message');
 
-        // Google Apps Script Web App URL - will be deployed to collect emails
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxQVvZ8KqE_zYHJxN7vKxPqRmE0jYvBGPxYqGKLPQvMqN8vR6LYqGKLPQvMqN8vR6LY/exec';
-
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -585,11 +582,12 @@
             errorMessage.style.display = 'none';
 
             try {
-                const response = await fetch(SCRIPT_URL, {
+                // Use Basin.io - free form backend
+                const response = await fetch('https://usebasin.com/f/8e0c5f4a0e3a', {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify({
                         email: email,
@@ -598,25 +596,15 @@
                     })
                 });
 
-                // With no-cors, we can't read the response, so assume success
-                form.reset();
-                successMessage.style.display = 'block';
-
-                // Also send notification email
-                await fetch('https://formspree.io/f/mpwzwqvy', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        _subject: 'Fetch App - New Waitlist Signup'
-                    })
-                }).catch(() => { }); // Silent fail for notification
-
-                setTimeout(() => {
-                    successMessage.style.display = 'none';
-                }, 5000);
+                if (response.ok) {
+                    form.reset();
+                    successMessage.style.display = 'block';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 5000);
+                } else {
+                    throw new Error('Submission failed');
+                }
 
             } catch (error) {
                 errorMessage.style.display = 'block';
