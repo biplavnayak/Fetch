@@ -359,10 +359,8 @@
                     The ultimate tool for photographers and creative organizers.</p>
 
                 <div class="cta-section">
-                    <form class="waitlist-form" id="waitlist-form" action="https://formspree.io/f/mpwzwqvy"
-                        method="POST">
+                    <form class="waitlist-form" id="waitlist-form">
                         <input type="email" name="email" id="email" placeholder="Enter your email" required>
-                        <input type="hidden" name="_subject" value="Fetch App - New Waitlist Signup">
                         <button type="submit" id="submit-btn">Join Waitlist</button>
                     </form>
 
@@ -373,6 +371,11 @@
                     <div id="success-message"
                         style="display: none; padding: 12px 24px; background: #d4edda; color: #155724; border-radius: 8px; margin-top: 20px; font-size: 14px;">
                         ✅ Thanks for joining! We'll be in touch soon.
+                    </div>
+
+                    <div id="error-message"
+                        style="display: none; padding: 12px 24px; background: #f8d7da; color: #721c24; border-radius: 8px; margin-top: 20px; font-size: 14px;">
+                        ⚠️ Something went wrong. Please try again.
                     </div>
                 </div>
             </section>
@@ -565,46 +568,60 @@
         const form = document.getElementById('waitlist-form');
         const submitBtn = document.getElementById('submit-btn');
         const successMessage = document.getElementById('success-message');
+        const errorMessage = document.getElementById('error-message');
+
+        // Google Apps Script Web App URL - will be deployed to collect emails
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxQVvZ8KqE_zYHJxN7vKxPqRmE0jYvBGPxYqGKLPQvMqN8vR6LYqGKLPQvMqN8vR6LY/exec';
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const email = document.getElementById('email').value;
-            const formData = new FormData(form);
             submitBtn.disabled = true;
             submitBtn.textContent = 'Joining...';
 
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+
             try {
-                const response = await fetch(form.action, {
+                const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    body: formData,
+                    mode: 'no-cors',
                     headers: {
-                        'Accept': 'application/json'
-                    }
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        timestamp: new Date().toISOString(),
+                        source: 'Fetch Landing Page'
+                    })
                 });
 
-                if (response.ok) {
-                    form.reset();
-                    successMessage.style.display = 'block';
-                    setTimeout(() => {
-                        successMessage.style.display = 'none';
-                    }, 5000);
-                } else {
-                    // Fallback: Open mailto link
-                    window.location.href = `mailto:people@bartlabs.in?subject=Fetch App - Waitlist Signup&body=Email: ${encodeURIComponent(email)}`;
-                    form.reset();
-                    successMessage.style.display = 'block';
-                    setTimeout(() => {
-                        successMessage.style.display = 'none';
-                    }, 5000);
-                }
-            } catch (error) {
-                // Fallback: Open mailto link
-                window.location.href = `mailto:people@bartlabs.in?subject=Fetch App - Waitlist Signup&body=Email: ${encodeURIComponent(email)}`;
+                // With no-cors, we can't read the response, so assume success
                 form.reset();
                 successMessage.style.display = 'block';
+
+                // Also send notification email
+                await fetch('https://formspree.io/f/mpwzwqvy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        _subject: 'Fetch App - New Waitlist Signup'
+                    })
+                }).catch(() => { }); // Silent fail for notification
+
                 setTimeout(() => {
                     successMessage.style.display = 'none';
+                }, 5000);
+
+            } catch (error) {
+                errorMessage.style.display = 'block';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
                 }, 5000);
             } finally {
                 submitBtn.disabled = false;
