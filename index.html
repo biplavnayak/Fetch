@@ -5,7 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fetch - Simply find what matters</title>
+    <meta name="description"
+        content="Match source files with a reference list or folder to separate them automatically. The ultimate tool for photographers and creative organizers.">
     <style>
+        :root {
+            --text-primary: #37352f;
+            --text-secondary: #787774;
+            --border-color: rgba(55, 53, 47, 0.09);
+            --hover-bg: rgba(55, 53, 47, 0.03);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,11 +22,14 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
             line-height: 1.6;
-            color: #37352f;
+            color: var(--text-primary);
             background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+            background-image: radial-gradient(circle at 1px 1px, rgba(55, 53, 47, 0.03) 1px, transparent 0);
+            background-size: 40px 40px;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
@@ -28,20 +40,34 @@
 
         header {
             padding: 20px 0;
-            border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+            border-bottom: 1px solid var(--border-color);
             margin-bottom: 80px;
         }
 
         .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-weight: 600;
             font-size: 18px;
-            color: #37352f;
+            color: var(--text-primary);
             text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .brand:hover {
+            opacity: 0.7;
+        }
+
+        .brand img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
         }
 
         .hero {
             text-align: center;
-            padding: 80px 0;
+            padding: 80px 0 60px;
             max-width: 900px;
             margin: 0 auto;
         }
@@ -56,60 +82,231 @@
 
         .subtitle {
             font-size: 24px;
-            color: #787774;
+            color: var(--text-secondary);
             margin-bottom: 48px;
             line-height: 1.5;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .cta {
+        .cta-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .waitlist-form {
             display: flex;
             gap: 12px;
-            justify-content: center;
-            margin-bottom: 20px;
+            width: 100%;
+            max-width: 500px;
         }
 
         input {
+            flex: 1;
             padding: 14px 18px;
-            border: 1px solid rgba(55, 53, 47, 0.09);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 16px;
-            width: 300px;
+            background: white;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(55, 53, 47, 0.1);
         }
 
         button {
             padding: 14px 28px;
-            background: linear-gradient(135deg, #2383e2 0%, #1a6dc4 100%);
+            background: var(--text-primary);
             color: white;
             border: none;
             border-radius: 8px;
             font-weight: 500;
             font-size: 16px;
             cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
         }
 
         button:hover {
-            background: #1a6dc4;
+            background: #000;
+            transform: translateY(-2px);
         }
 
         .coming-soon {
             padding: 10px 20px;
-            background: rgba(55, 53, 47, 0.03);
-            color: #787774;
+            background: var(--hover-bg);
+            color: var(--text-secondary);
             border-radius: 6px;
             font-size: 14px;
-            display: inline-block;
+            border: 1px solid var(--border-color);
+        }
+
+        .hero-visual {
+            margin: 80px 0;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: white;
+            padding: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-visual:hover {
+            transform: translateY(-4px);
+        }
+
+        .hero-visual img {
+            width: 100%;
+            display: block;
+        }
+
+        .how-it-works {
+            max-width: 900px;
+            margin: 100px auto;
+        }
+
+        .how-it-works h2 {
+            font-size: 40px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .step {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            background: white;
+            border: 2px solid var(--text-primary);
+            color: var(--text-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .step-content h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .workflow-diagram {
+            margin: 60px 0;
+            padding: 60px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .workflow-diagram svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .features {
+            max-width: 1000px;
+            margin: 100px auto;
+        }
+
+        .features h2 {
+            font-size: 40px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .features-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            padding: 32px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
         }
 
         footer {
             text-align: center;
             padding: 60px 0;
             margin-top: 100px;
-            border-top: 1px solid rgba(55, 53, 47, 0.09);
-            color: #787774;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
             font-size: 14px;
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 0 24px;
+            }
+
             h1 {
                 font-size: 40px;
             }
@@ -118,14 +315,25 @@
                 font-size: 18px;
             }
 
-            .cta {
+            .waitlist-form {
                 flex-direction: column;
-                align-items: center;
             }
 
-            input {
-                width: 100%;
-                max-width: 400px;
+            .how-it-works h2,
+            .features h2 {
+                font-size: 32px;
+            }
+
+            .step {
+                flex-direction: column;
+            }
+
+            .workflow-diagram {
+                padding: 30px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -134,20 +342,205 @@
 <body>
     <div class="container">
         <header>
-            <a href="#" class="brand">📁 Fetch</a>
+            <a href="#" class="brand">
+                <img src="assets/logo.png" alt="Fetch Logo">
+                Fetch
+            </a>
         </header>
 
-        <main class="hero">
-            <h1>Simply find<br>what matters.</h1>
-            <p class="subtitle">Match source files with a reference list or folder to separate them automatically. The
-                ultimate tool for photographers and creative organizers.</p>
+        <main>
+            <section class="hero">
+                <h1>Simply find<br>what matters.</h1>
+                <p class="subtitle">Match source files with a reference list or folder to separate them automatically.
+                    The ultimate tool for photographers and creative organizers.</p>
 
-            <div class="cta">
-                <input type="email" placeholder="Enter your email" id="email">
-                <button onclick="joinWaitlist()">Join Waitlist</button>
+                <div class="cta-section">
+                    <form class="waitlist-form" onsubmit="joinWaitlist(event)">
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                        <button type="submit">Join Waitlist</button>
+                    </form>
+
+                    <div class="coming-soon">
+                        Download for Mac — Coming Soon
+                    </div>
+                </div>
+            </section>
+
+            <div class="hero-visual">
+                <img src="assets/hero.png" alt="Fetch App Interface">
             </div>
 
-            <div class="coming-soon">Download for Mac — Coming Soon</div>
+            <section class="how-it-works">
+                <h2>How it works</h2>
+
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Select your source folder</h3>
+                            <p>Point Fetch to the folder containing all your files. It will recursively search through
+                                all subfolders to find matches.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Choose your reference</h3>
+                            <p>Either select a folder with reference files, or paste a list of filenames. Fetch will
+                                match based on filename, ignoring extensions.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Process and organize</h3>
+                            <p>Preview the matches, then copy or move them to your output folder. Made a mistake? Use
+                                the one-click undo feature.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="workflow-diagram">
+                    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Source -->
+                        <g>
+                            <rect x="20" y="60" width="120" height="80" rx="8" fill="white" stroke="#37352f"
+                                stroke-width="2" />
+                            <text x="80" y="90" text-anchor="middle" font-size="12" fill="#787774">Source</text>
+                            <path d="M 60 105 L 60 120 L 100 120 L 100 105 Z M 60 105 L 65 100 L 95 100 L 100 105"
+                                fill="none" stroke="#37352f" stroke-width="1.5" />
+                        </g>
+                        <!-- Arrow 1 -->
+                        <g>
+                            <line x1="140" y1="100" x2="220" y2="100" stroke="#37352f" stroke-width="2" />
+                            <polygon points="220,100 210,95 210,105" fill="#37352f" />
+                        </g>
+                        <!-- Reference -->
+                        <g>
+                            <rect x="220" y="60" width="120" height="80" rx="8" fill="white" stroke="#37352f"
+                                stroke-width="2" />
+                            <text x="280" y="90" text-anchor="middle" font-size="12" fill="#787774">Reference</text>
+                            <rect x="260" y="100" width="40" height="25" rx="2" fill="none" stroke="#37352f"
+                                stroke-width="1.5" />
+                            <line x1="265" y1="107" x2="295" y2="107" stroke="#37352f" stroke-width="1.5" />
+                            <line x1="265" y1="113" x2="295" y2="113" stroke="#37352f" stroke-width="1.5" />
+                            <line x1="265" y1="119" x2="285" y2="119" stroke="#37352f" stroke-width="1.5" />
+                        </g>
+                        <!-- Arrow 2 -->
+                        <g>
+                            <line x1="340" y1="100" x2="420" y2="100" stroke="#37352f" stroke-width="2" />
+                            <polygon points="420,100 410,95 410,105" fill="#37352f" />
+                        </g>
+                        <!-- Fetch -->
+                        <g>
+                            <circle cx="480" cy="100" r="50" fill="white" stroke="#37352f" stroke-width="2" />
+                            <text x="480" y="105" text-anchor="middle" font-size="14" fill="#37352f"
+                                font-weight="700">FETCH</text>
+                        </g>
+                        <!-- Arrow 3 -->
+                        <g>
+                            <line x1="530" y1="100" x2="610" y2="100" stroke="#37352f" stroke-width="2" />
+                            <polygon points="610,100 600,95 600,105" fill="#37352f" />
+                        </g>
+                        <!-- Output -->
+                        <g>
+                            <rect x="610" y="60" width="120" height="80" rx="8" fill="white" stroke="#37352f"
+                                stroke-width="2" />
+                            <text x="670" y="90" text-anchor="middle" font-size="12" fill="#787774">Organized</text>
+                            <circle cx="670" cy="112" r="15" fill="none" stroke="#37352f" stroke-width="1.5" />
+                            <path d="M 663 112 L 668 117 L 677 108" fill="none" stroke="#37352f" stroke-width="2"
+                                stroke-linecap="round" />
+                        </g>
+                    </svg>
+                </div>
+            </section>
+
+            <section class="features">
+                <h2>Built for efficiency</h2>
+                <p class="features-subtitle">Everything you need to organize files at scale</p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                            </svg>
+                        </div>
+                        <h3>Smart Matching</h3>
+                        <p>Automatically matches files based on filename, ignoring extensions. Perfect for separating
+                            RAW and JPG files from photo shoots.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="m21 21-4.35-4.35" />
+                            </svg>
+                        </div>
+                        <h3>Deep Search</h3>
+                        <p>Recursively searches through nested folders to find every matching file, no matter how deep
+                            it's buried in your directory structure.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="1 4 1 10 7 10" />
+                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                            </svg>
+                        </div>
+                        <h3>One-Click Undo</h3>
+                        <p>Made a mistake? Every operation can be undone with a single click, restoring files to their
+                            original locations.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                            </svg>
+                        </div>
+                        <h3>Blazing Fast</h3>
+                        <p>Native desktop performance means you can process thousands of files in seconds without
+                            breaking a sweat.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <line x1="16" y1="13" x2="8" y2="13" />
+                                <line x1="16" y1="17" x2="8" y2="17" />
+                            </svg>
+                        </div>
+                        <h3>Flexible Input</h3>
+                        <p>Use either a reference folder or paste a list of filenames. Works with any file type and
+                            handles duplicates intelligently.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                        </div>
+                        <h3>Preview First</h3>
+                        <p>See exactly what will be matched before processing. No surprises, no accidental file
+                            operations.</p>
+                    </div>
+                </div>
+            </section>
         </main>
 
         <footer>
@@ -156,7 +549,8 @@
     </div>
 
     <script>
-        function joinWaitlist() {
+        function joinWaitlist(e) {
+            e.preventDefault();
             const email = document.getElementById('email').value;
             if (email) {
                 alert('Thanks for joining! We\'ll be in touch soon. 🚀');
