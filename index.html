@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch - Simply find what matters</title>
+    <meta name="description"
+        content="Match source files with a reference list or folder to separate them automatically. The ultimate tool for photographers and creative organizers.">
+    <style>
+        /* Inline all CSS for Vercel deployment */
+        :root {
+            --bg-color: #ffffff;
+            --bg-gradient: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+            --text-primary: #37352f;
+            --text-secondary: #787774;
+            --text-tertiary: #9b9a97;
+            --border-color: rgba(55, 53, 47, 0.09);
+            --hover-bg: rgba(55, 53, 47, 0.03);
+            --accent-color: #2383e2;
+            --accent-hover: #1a6dc4;
+            --accent-gradient: linear-gradient(135deg, #2383e2 0%, #1a6dc4 100%);
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            background-image: radial-gradient(circle at 1px 1px, rgba(55, 53, 47, 0.03) 1px, transparent 0);
+            background-size: 40px 40px;
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        header {
+            padding: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 80px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .brand:hover {
+            opacity: 0.7;
+        }
+
+        .brand img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 0 60px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        .hero .subtitle {
+            font-size: 24px;
+            color: var(--text-secondary);
+            margin-bottom: 48px;
+            line-height: 1.5;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .waitlist-form {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--bg-color);
+            transition: all 0.2s;
+            font-family: inherit;
+            color: var(--text-primary);
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(35, 131, 226, 0.1);
+        }
+
+        .input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 2px 8px rgba(35, 131, 226, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(35, 131, 226, 0.35);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .coming-soon {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--hover-bg);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        .hero-visual {
+            margin: 80px 0;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: white;
+            padding: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-visual:hover {
+            transform: translateY(-4px);
+        }
+
+        .hero-visual img {
+            width: 100%;
+            display: block;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: var(--text-primary);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 60px 0;
+            margin-top: 100px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 24px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .hero .subtitle {
+                font-size: 18px;
+            }
+
+            .waitlist-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <a href="#" class="brand">
+                <span>📁</span>
+                Fetch
+            </a>
+        </header>
+
+        <main>
+            <section class="hero">
+                <h1>Simply find<br>what matters.</h1>
+                <p class="subtitle">Match source files with a reference list or folder to separate them automatically.
+                    The ultimate tool for photographers and creative organizers.</p>
+
+                <div class="cta-section">
+                    <form id="waitlist-form" class="waitlist-form">
+                        <input type="email" id="email" class="input" placeholder="Enter your email" required>
+                        <button type="submit" class="btn btn-primary">Join Waitlist</button>
+                    </form>
+
+                    <div class="coming-soon">
+                        Download for Mac — Coming Soon
+                    </div>
+                </div>
+            </section>
+
+            <div class="hero-visual">
+                <p style="text-align: center; color: var(--text-secondary);">
+                    Fetch App Interface Coming Soon
+                </p>
+            </div>
+        </main>
+
+        <footer>
+            <div>© 2025 BartLabs. All rights reserved.</div>
+        </footer>
+    </div>
+
+    <div id="toast" class="toast">Successfully joined waitlist!</div>
+
+    <script>
+        document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const emailInput = document.getElementById('email');
+            const email = emailInput.value;
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+
+            btn.disabled = true;
+            btn.innerText = 'Joining...';
+
+            // Simulate API call (replace with actual endpoint)
+            setTimeout(() => {
+                showToast('You\'re on the list! 🚀');
+                emailInput.value = '';
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }, 1000);
+        });
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>
